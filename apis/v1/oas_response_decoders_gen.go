@@ -3,6 +3,7 @@
 package v1
 
 import (
+	"fmt"
 	"io"
 	"mime"
 	"net/http"
@@ -348,7 +349,7 @@ func decodeAutomatedActionsCreateResponse(resp *http.Response) (res AutomatedAct
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal AutomatedActionsCreateTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds
@@ -478,7 +479,7 @@ func decodeAutomatedActionsCreateResponse(resp *http.Response) (res AutomatedAct
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal AutomatedActionsCreateTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds
@@ -853,7 +854,7 @@ func decodeAutomatedActionsDeleteResponse(resp *http.Response) (res AutomatedAct
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal AutomatedActionsDeleteTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds
@@ -983,7 +984,7 @@ func decodeAutomatedActionsDeleteResponse(resp *http.Response) (res AutomatedAct
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal AutomatedActionsDeleteTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds
@@ -1831,7 +1832,7 @@ func decodeAutomatedActionsReadResponse(resp *http.Response) (res AutomatedActio
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal AutomatedActionsReadTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds
@@ -1961,7 +1962,7 @@ func decodeAutomatedActionsReadResponse(resp *http.Response) (res AutomatedActio
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal AutomatedActionsReadTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds
@@ -2533,7 +2534,7 @@ func decodeAutomatedActionsUpdateResponse(resp *http.Response) (res AutomatedAct
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal AutomatedActionsUpdateTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds
@@ -2663,7 +2664,7 @@ func decodeAutomatedActionsUpdateResponse(resp *http.Response) (res AutomatedAct
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal AutomatedActionsUpdateTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds
@@ -2961,6 +2962,7 @@ func decodeEvaluationRulesListResponse(resp *http.Response) (res EvaluationRules
 			if err != nil {
 				return res, err
 			}
+			fmt.Printf("body: %s\n", string(buf))
 			d := jx.DecodeBytes(buf)
 
 			var response EvaluationRulesListApplicationJSONUnauthorized
@@ -3235,7 +3237,7 @@ func decodeEvaluationRulesListResponse(resp *http.Response) (res EvaluationRules
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal EvaluationRulesListTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds
@@ -3365,7 +3367,7 @@ func decodeEvaluationRulesListResponse(resp *http.Response) (res EvaluationRules
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal EvaluationRulesListTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds
@@ -3859,7 +3861,7 @@ func decodeEvaluationRulesReadResponse(resp *http.Response) (res EvaluationRules
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal EvaluationRulesReadTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds
@@ -3989,7 +3991,7 @@ func decodeEvaluationRulesReadResponse(resp *http.Response) (res EvaluationRules
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal EvaluationRulesReadTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds
@@ -4561,7 +4563,7 @@ func decodeEvaluationRulesUpdateResponse(resp *http.Response) (res EvaluationRul
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal EvaluationRulesUpdateTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds
@@ -4691,7 +4693,7 @@ func decodeEvaluationRulesUpdateResponse(resp *http.Response) (res EvaluationRul
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal EvaluationRulesUpdateTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds
@@ -5254,7 +5256,7 @@ func decodeProjectActivationCreateResponse(resp *http.Response) (res ProjectActi
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal ProjectActivationCreateTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds
@@ -5384,7 +5386,7 @@ func decodeProjectActivationCreateResponse(resp *http.Response) (res ProjectActi
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal ProjectActivationCreateTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds
@@ -5869,7 +5871,7 @@ func decodeProjectActivationReadResponse(resp *http.Response) (res ProjectActiva
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal ProjectActivationReadTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds
@@ -5999,7 +6001,7 @@ func decodeProjectActivationReadResponse(resp *http.Response) (res ProjectActiva
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal ProjectActivationReadTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds
@@ -6562,7 +6564,7 @@ func decodeProjectActivationUpdateResponse(resp *http.Response) (res ProjectActi
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal ProjectActivationUpdateTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds
@@ -6692,7 +6694,7 @@ func decodeProjectActivationUpdateResponse(resp *http.Response) (res ProjectActi
 				if err := func() error {
 					if err := h.HasParam(cfg); err == nil {
 						if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
-							var wrapperDotRetryAfterVal ProjectActivationUpdateTooManyRequestsRetryAfter
+							var wrapperDotRetryAfterVal TooManyRequestsRetryAfter
 							if err := func() error {
 								var failures []error
 								// Try to decode as ClientDelaySeconds

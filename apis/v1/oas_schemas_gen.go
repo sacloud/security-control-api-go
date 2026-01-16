@@ -4504,6 +4504,120 @@ type ProjectActivationReadApplicationProblemJSONUnauthorized Unauthorized
 
 func (*ProjectActivationReadApplicationProblemJSONUnauthorized) projectActivationReadRes() {}
 
+// TooManyRequestsRetryAfter represents sum type.
+type TooManyRequestsRetryAfter struct {
+	Type                TooManyRequestsRetryAfterType // switch on this field
+	ClientDelaySeconds  ClientDelaySeconds
+	ClientRetryDateTime ClientRetryDateTime
+}
+
+// TooManyRequestsRetryAfterType is oneOf type of TooManyRequestsRetryAfter.
+type TooManyRequestsRetryAfterType string
+
+// Possible values for TooManyRequestsRetryAfterType.
+const (
+	ClientDelaySecondsTooManyRequestsRetryAfter  TooManyRequestsRetryAfterType = "ClientDelaySeconds"
+	ClientRetryDateTimeTooManyRequestsRetryAfter TooManyRequestsRetryAfterType = "ClientRetryDateTime"
+)
+
+// IsClientDelaySeconds reports whether TooManyRequestsRetryAfter is ClientDelaySeconds.
+func (s TooManyRequestsRetryAfter) IsClientDelaySeconds() bool {
+	return s.Type == ClientDelaySecondsTooManyRequestsRetryAfter
+}
+
+// IsClientRetryDateTime reports whether TooManyRequestsRetryAfter is ClientRetryDateTime.
+func (s TooManyRequestsRetryAfter) IsClientRetryDateTime() bool {
+	return s.Type == ClientRetryDateTimeTooManyRequestsRetryAfter
+}
+
+// SetClientDelaySeconds sets TooManyRequestsRetryAfter to ClientDelaySeconds.
+func (s *TooManyRequestsRetryAfter) SetClientDelaySeconds(v ClientDelaySeconds) {
+	s.Type = ClientDelaySecondsTooManyRequestsRetryAfter
+	s.ClientDelaySeconds = v
+}
+
+// GetClientDelaySeconds returns ClientDelaySeconds and true boolean if TooManyRequestsRetryAfter is ClientDelaySeconds.
+func (s TooManyRequestsRetryAfter) GetClientDelaySeconds() (v ClientDelaySeconds, ok bool) {
+	if !s.IsClientDelaySeconds() {
+		return v, false
+	}
+	return s.ClientDelaySeconds, true
+}
+
+// NewClientDelaySecondsTooManyRequestsRetryAfter returns new TooManyRequestsRetryAfter from ClientDelaySeconds.
+func NewClientDelaySecondsTooManyRequestsRetryAfter(v ClientDelaySeconds) TooManyRequestsRetryAfter {
+	var s TooManyRequestsRetryAfter
+	s.SetClientDelaySeconds(v)
+	return s
+}
+
+// SetClientRetryDateTime sets ProjectActivationReadTooManyRequestsRetryAfter to ClientRetryDateTime.
+func (s *TooManyRequestsRetryAfter) SetClientRetryDateTime(v ClientRetryDateTime) {
+	s.Type = ClientRetryDateTimeTooManyRequestsRetryAfter
+	s.ClientRetryDateTime = v
+}
+
+// GetClientRetryDateTime returns ClientRetryDateTime and true boolean if ProjectActivationReadTooManyRequestsRetryAfter is ClientRetryDateTime.
+func (s TooManyRequestsRetryAfter) GetClientRetryDateTime() (v ClientRetryDateTime, ok bool) {
+	if !s.IsClientRetryDateTime() {
+		return v, false
+	}
+	return s.ClientRetryDateTime, true
+}
+
+// NewClientRetryDateTimeTooManyRequestsRetryAfter returns new TooManyRequestsRetryAfter from ClientRetryDateTime.
+func NewClientRetryDateTimeTooManyRequestsRetryAfter(v ClientRetryDateTime) TooManyRequestsRetryAfter {
+	var s TooManyRequestsRetryAfter
+	s.SetClientRetryDateTime(v)
+	return s
+}
+
+// NewOptTooManyRequestsRetryAfter returns new OptTooManyRequestsRetryAfter with value set to v.
+func NewOptTooManyRequestsRetryAfter(v TooManyRequestsRetryAfter) OptTooManyRequestsRetryAfter {
+	return OptTooManyRequestsRetryAfter{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptTooManyRequestsRetryAfter is optional TooManyRequestsRetryAfter.
+type OptTooManyRequestsRetryAfter struct {
+	Value TooManyRequestsRetryAfter
+	Set   bool
+}
+
+// IsSet returns true if OptTooManyRequestsRetryAfter was set.
+func (o OptTooManyRequestsRetryAfter) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptTooManyRequestsRetryAfter) Reset() {
+	var v TooManyRequestsRetryAfter
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptTooManyRequestsRetryAfter) SetTo(v TooManyRequestsRetryAfter) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptTooManyRequestsRetryAfter) Get() (v TooManyRequestsRetryAfter, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptTooManyRequestsRetryAfter) Or(d TooManyRequestsRetryAfter) TooManyRequestsRetryAfter {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // ProjectActivationReadTooManyRequestsRetryAfter represents sum type.
 type ProjectActivationReadTooManyRequestsRetryAfter struct {
 	Type                ProjectActivationReadTooManyRequestsRetryAfterType // switch on this field
@@ -4957,12 +5071,13 @@ func (s *TooManyRequestsDetail) UnmarshalText(data []byte) error {
 
 // TooManyRequestsHeaders wraps TooManyRequests with response headers.
 type TooManyRequestsHeaders struct {
-	RetryAfter OptProjectActivationReadTooManyRequestsRetryAfter
+	//RetryAfter OptProjectActivationReadTooManyRequestsRetryAfter
+	RetryAfter OptTooManyRequestsRetryAfter
 	Response   TooManyRequests
 }
 
 // GetRetryAfter returns the value of RetryAfter.
-func (s *TooManyRequestsHeaders) GetRetryAfter() OptProjectActivationReadTooManyRequestsRetryAfter {
+func (s *TooManyRequestsHeaders) GetRetryAfter() OptTooManyRequestsRetryAfter {
 	return s.RetryAfter
 }
 
@@ -4972,7 +5087,7 @@ func (s *TooManyRequestsHeaders) GetResponse() TooManyRequests {
 }
 
 // SetRetryAfter sets the value of RetryAfter.
-func (s *TooManyRequestsHeaders) SetRetryAfter(val OptProjectActivationReadTooManyRequestsRetryAfter) {
+func (s *TooManyRequestsHeaders) SetRetryAfter(val OptTooManyRequestsRetryAfter) {
 	s.RetryAfter = val
 }
 
