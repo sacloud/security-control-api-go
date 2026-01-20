@@ -35,23 +35,12 @@ func TestEvaluationRulesAPI(t *testing.T) {
 	assert.Equal(t, "server-no-public-ip", string(respRead.Rule.OneOf.Type))
 
 	zones := []string{"is1a", "is1b", "tk1a", "tk1b"}
-	respUpdate, err := erOp.Update(ctx, "server-no-public-ip", v1.EvaluationRuleInput{
-		IsEnabled: !respRead.IsEnabled,
-		Rule: v1.EvaluationRuleUnion{
-			OneOf: v1.EvaluationRuleUnionSum{
-				Type: v1.EvaluationRuleUnionSumType("server-no-public-ip"),
-				ServerNoPublicIP: v1.ServerNoPublicIP{
-					EvaluationRuleId: v1.ServerNoPublicIPEvaluationRuleId("server-no-public-ip"),
-					Parameter: v1.NewOptEvaluationRuleParametersZonedEvaluationTarget(
-						v1.EvaluationRuleParametersZonedEvaluationTarget{
-							ServicePrincipalId: v1.NewOptString(os.Getenv("SAKURA_SERVICE_PRINCIPAL_ID")),
-							Zones:              zones,
-						},
-					),
-				},
-			},
-		},
-	})
+	respUpdate, err := erOp.Update(ctx, "server-no-public-ip", securitycontrol.SetupEvaluationRuleInput(&securitycontrol.EvaluationRuleInputParams{
+		ID:                 "server-no-public-ip",
+		ServicePrincipalID: os.Getenv("SAKURA_SERVICE_PRINCIPAL_ID"),
+		Targets:            zones,
+		Enabled:            !respRead.IsEnabled,
+	}))
 	require.NoError(t, err)
 	require.NotNil(t, respUpdate)
 	assert.Equal(t, !respRead.IsEnabled, respUpdate.IsEnabled)
