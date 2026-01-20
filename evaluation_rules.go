@@ -103,3 +103,234 @@ func (op *evaluationRuleOp) Update(ctx context.Context, id string, req v1.Evalua
 		return nil, NewAPIError(methodName, 0, errors.New("unknown error"))
 	}
 }
+
+type EvaluationRuleInputParams struct {
+	ID                 string
+	ServicePrincipalID string
+	Targets            []string
+	Enabled            bool
+}
+
+func SetupEvaluationRuleInput(params *EvaluationRuleInputParams) v1.EvaluationRuleInput {
+	switch params.ID {
+	case "server-no-public-ip":
+		return v1.EvaluationRuleInput{
+			IsEnabled: params.Enabled,
+			Rule: v1.EvaluationRuleUnion{
+				OneOf: v1.EvaluationRuleUnionSum{
+					Type: v1.EvaluationRuleUnionSumType("server-no-public-ip"),
+					ServerNoPublicIP: v1.ServerNoPublicIP{
+						EvaluationRuleId: v1.ServerNoPublicIPEvaluationRuleId("server-no-public-ip"),
+						Parameter: v1.NewOptEvaluationRuleParametersZonedEvaluationTarget(
+							v1.EvaluationRuleParametersZonedEvaluationTarget{
+								ServicePrincipalId: v1.NewOptString(params.ServicePrincipalID),
+								Zones:              params.Targets,
+							},
+						),
+					},
+				},
+			},
+		}
+	case "disk-encryption-enabled":
+		return v1.EvaluationRuleInput{
+			IsEnabled: params.Enabled,
+			Rule: v1.EvaluationRuleUnion{
+				OneOf: v1.EvaluationRuleUnionSum{
+					Type: v1.EvaluationRuleUnionSumType("disk-encryption-enabled"),
+					DiskEncryptionEnabled: v1.DiskEncryptionEnabled{
+						EvaluationRuleId: v1.DiskEncryptionEnabledEvaluationRuleId("disk-encryption-enabled"),
+						Parameter: v1.NewOptEvaluationRuleParametersZonedEvaluationTarget(
+							v1.EvaluationRuleParametersZonedEvaluationTarget{
+								ServicePrincipalId: v1.NewOptString(params.ServicePrincipalID),
+								Zones:              params.Targets,
+							},
+						),
+					},
+				},
+			},
+		}
+	case "dba-encryption-enabled":
+		return v1.EvaluationRuleInput{
+			IsEnabled: params.Enabled,
+			Rule: v1.EvaluationRuleUnion{
+				OneOf: v1.EvaluationRuleUnionSum{
+					Type: v1.EvaluationRuleUnionSumType("dba-encryption-enabled"),
+					DbaEncryptionEnabled: v1.DbaEncryptionEnabled{
+						EvaluationRuleId: v1.DbaEncryptionEnabledEvaluationRuleId("dba-encryption-enabled"),
+						Parameter: v1.NewOptEvaluationRuleParametersZonedEvaluationTarget(
+							v1.EvaluationRuleParametersZonedEvaluationTarget{
+								ServicePrincipalId: v1.NewOptString(params.ServicePrincipalID),
+								Zones:              params.Targets,
+							},
+						),
+					},
+				},
+			},
+		}
+	case "dba-no-public-ip":
+		return v1.EvaluationRuleInput{
+			IsEnabled: params.Enabled,
+			Rule: v1.EvaluationRuleUnion{
+				OneOf: v1.EvaluationRuleUnionSum{
+					Type: v1.EvaluationRuleUnionSumType("dba-no-public-ip"),
+					DbaNoPublicIP: v1.DbaNoPublicIP{
+						EvaluationRuleId: v1.DbaNoPublicIPEvaluationRuleId("dba-no-public-ip"),
+						Parameter: v1.NewOptEvaluationRuleParametersZonedEvaluationTarget(
+							v1.EvaluationRuleParametersZonedEvaluationTarget{
+								ServicePrincipalId: v1.NewOptString(params.ServicePrincipalID),
+								Zones:              params.Targets,
+							},
+						),
+					},
+				},
+			},
+		}
+	case "objectstorage-bucket-acl-changed":
+		return v1.EvaluationRuleInput{
+			IsEnabled: params.Enabled,
+			Rule: v1.EvaluationRuleUnion{
+				OneOf: v1.EvaluationRuleUnionSum{
+					Type: v1.EvaluationRuleUnionSumType("objectstorage-bucket-acl-changed"),
+					ObjectStorageBucketACLChanged: v1.ObjectStorageBucketACLChanged{
+						EvaluationRuleId: v1.ObjectStorageBucketACLChangedEvaluationRuleId("objectstorage-bucket-acl-changed"),
+						Parameter: v1.NewOptEvaluationRuleParametersEvaluationTarget(
+							v1.EvaluationRuleParametersEvaluationTarget{
+								ServicePrincipalId: v1.NewOptString(params.ServicePrincipalID),
+							},
+						),
+					},
+				},
+			},
+		}
+	case "addon-datalake-no-public-access":
+		return v1.EvaluationRuleInput{
+			IsEnabled: params.Enabled,
+			Rule: v1.EvaluationRuleUnion{
+				OneOf: v1.EvaluationRuleUnionSum{
+					Type: v1.EvaluationRuleUnionSumType("addon-datalake-no-public-access"),
+					AddonDatalakeNoPublicAccess: v1.AddonDatalakeNoPublicAccess{
+						EvaluationRuleId: v1.AddonDatalakeNoPublicAccessEvaluationRuleId("addon-datalake-no-public-access"),
+						Parameter: v1.NewOptEvaluationRuleParametersEvaluationTarget(
+							v1.EvaluationRuleParametersEvaluationTarget{
+								ServicePrincipalId: v1.NewOptString(params.ServicePrincipalID),
+							},
+						),
+					},
+				},
+			},
+		}
+	case "addon-dwh-no-public-access":
+		return v1.EvaluationRuleInput{
+			IsEnabled: params.Enabled,
+			Rule: v1.EvaluationRuleUnion{
+				OneOf: v1.EvaluationRuleUnionSum{
+					Type: v1.EvaluationRuleUnionSumType("addon-dwh-no-public-access"),
+					AddonDwhNoPublicAccess: v1.AddonDwhNoPublicAccess{
+						EvaluationRuleId: v1.AddonDwhNoPublicAccessEvaluationRuleId("addon-dwh-no-public-access"),
+						Parameter: v1.NewOptEvaluationRuleParametersEvaluationTarget(
+							v1.EvaluationRuleParametersEvaluationTarget{
+								ServicePrincipalId: v1.NewOptString(params.ServicePrincipalID),
+							},
+						),
+					},
+				},
+			},
+		}
+	case "addon-threat-detection-enabled":
+		return v1.EvaluationRuleInput{
+			IsEnabled: params.Enabled,
+			Rule: v1.EvaluationRuleUnion{
+				OneOf: v1.EvaluationRuleUnionSum{
+					Type: v1.EvaluationRuleUnionSumType("addon-threat-detection-enabled"),
+					AddonThreatDetectionEnabled: v1.AddonThreatDetectionEnabled{
+						EvaluationRuleId: v1.AddonThreatDetectionEnabledEvaluationRuleId("addon-threat-detection-enabled"),
+						Parameter: v1.NewOptEvaluationRuleParametersZonedEvaluationTarget(
+							v1.EvaluationRuleParametersZonedEvaluationTarget{
+								ServicePrincipalId: v1.NewOptString(params.ServicePrincipalID),
+								Zones:              params.Targets,
+							},
+						),
+					},
+				},
+			},
+		}
+	case "addon-threat-detections":
+		return v1.EvaluationRuleInput{
+			IsEnabled: params.Enabled,
+			Rule: v1.EvaluationRuleUnion{
+				OneOf: v1.EvaluationRuleUnionSum{
+					Type: v1.EvaluationRuleUnionSumType("addon-threat-detections"),
+					AddonThreatDetections: v1.AddonThreatDetections{
+						EvaluationRuleId: v1.AddonThreatDetectionsEvaluationRuleId("addon-threat-detections"),
+					},
+				},
+			},
+		}
+	case "addon-vulnerability-detections":
+		return v1.EvaluationRuleInput{
+			IsEnabled: params.Enabled,
+			Rule: v1.EvaluationRuleUnion{
+				OneOf: v1.EvaluationRuleUnionSum{
+					Type: v1.EvaluationRuleUnionSumType("addon-vulnerability-detections"),
+					AddonVulnerabilityDetections: v1.AddonVulnerabilityDetections{
+						EvaluationRuleId: v1.AddonVulnerabilityDetectionsEvaluationRuleId("addon-vulnerability-detections"),
+					},
+				},
+			},
+		}
+	case "elb-logging-enabled":
+		return v1.EvaluationRuleInput{
+			IsEnabled: params.Enabled,
+			Rule: v1.EvaluationRuleUnion{
+				OneOf: v1.EvaluationRuleUnionSum{
+					Type: v1.EvaluationRuleUnionSumType("elb-logging-enabled"),
+					ELBLoggingEnabled: v1.ELBLoggingEnabled{
+						EvaluationRuleId: v1.ELBLoggingEnabledEvaluationRuleId("elb-logging-enabled"),
+						Parameter: v1.NewOptEvaluationRuleParametersEvaluationTarget(
+							v1.EvaluationRuleParametersEvaluationTarget{
+								ServicePrincipalId: v1.NewOptString(params.ServicePrincipalID),
+							},
+						),
+					},
+				},
+			},
+		}
+	case "iam-member-operation-detected":
+		return v1.EvaluationRuleInput{
+			IsEnabled: params.Enabled,
+			Rule: v1.EvaluationRuleUnion{
+				OneOf: v1.EvaluationRuleUnionSum{
+					Type: v1.EvaluationRuleUnionSumType("iam-member-operation-detected"),
+					IAMMemberOperationDetected: v1.IAMMemberOperationDetected{
+						EvaluationRuleId: v1.IAMMemberOperationDetectedEvaluationRuleId("iam-member-operation-detected"),
+						Parameter: v1.NewOptEvaluationRuleParametersEvaluationTarget(
+							v1.EvaluationRuleParametersEvaluationTarget{
+								ServicePrincipalId: v1.NewOptString(params.ServicePrincipalID),
+							},
+						),
+					},
+				},
+			},
+		}
+	case "nosql-encryption-enabled":
+		return v1.EvaluationRuleInput{
+			IsEnabled: params.Enabled,
+			Rule: v1.EvaluationRuleUnion{
+				OneOf: v1.EvaluationRuleUnionSum{
+					Type: v1.EvaluationRuleUnionSumType("nosql-encryption-enabled"),
+					NoSQLEncryptionEnabled: v1.NoSQLEncryptionEnabled{
+						EvaluationRuleId: v1.NoSQLEncryptionEnabledEvaluationRuleId("nosql-encryption-enabled"),
+						Parameter: v1.NewOptEvaluationRuleParametersZonedEvaluationTarget(
+							v1.EvaluationRuleParametersZonedEvaluationTarget{
+								ServicePrincipalId: v1.NewOptString(params.ServicePrincipalID),
+								Zones:              params.Targets,
+							},
+						),
+					},
+				},
+			},
+		}
+	default:
+		panic("unsupported evaluation rule ID: " + params.ID)
+	}
+}

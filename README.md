@@ -32,23 +32,13 @@ func runEvalRules() {
 
     // Evaluation Rules APIs
 	erOp := securitycontrol.NewEvaluationRulesOp(client)
-    updated, err := erOp.Update(ctx, "server-no-public-ip", v1.EvaluationRuleInput{
-		IsEnabled: true,
-		Rule: v1.EvaluationRuleUnion{
-			OneOf: v1.EvaluationRuleUnionSum{
-				Type: v1.EvaluationRuleUnionSumType("server-no-public-ip"),
-				ServerNoPublicIP: v1.ServerNoPublicIP{
-					EvaluationRuleId: v1.ServerNoPublicIPEvaluationRuleId("server-no-public-ip"),
-					Parameter: v1.NewOptEvaluationRuleParametersZonedEvaluationTarget(
-						v1.EvaluationRuleParametersZonedEvaluationTarget{
-                            ServicePrincipalId: v1.NewOptString("111111111111"),
-							Zones:              []string{"is1b", "tk1b"},
-						},
-					),
-				},
-			},
-		},
+	erInput := securitycontrol.SetupEvaluationRuleInput(&securitycontrol.EvaluationRuleInputParams{
+		ID:                 "server-no-public-ip",
+		ServicePrincipalID: "111111111111",
+		Targets:            []string{"is1b", "tk1b"},
+		Enabled:            true,
 	})
+    updated, err := erOp.Update(ctx, "server-no-public-ip", erInput)
     // Read/List
 
     // Automated Actions API
