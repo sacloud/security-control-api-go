@@ -14,7 +14,7 @@ import (
 type EvaluationRulesAPI interface {
 	List(ctx context.Context, parameter v1.EvaluationRulesListParams) (*v1.EvaluationRulesListOK, error)
 	Read(ctx context.Context, id string) (*v1.EvaluationRule, error)
-	Update(ctx context.Context, id string, request v1.EvaluationRuleInput) (*v1.EvaluationRule, error)
+	Update(ctx context.Context, id string, req *v1.EvaluationRuleInput) (*v1.EvaluationRule, error)
 }
 
 var _ EvaluationRulesAPI = (*evaluationRuleOp)(nil)
@@ -78,10 +78,10 @@ func (op *evaluationRuleOp) Read(ctx context.Context, id string) (*v1.Evaluation
 	}
 }
 
-func (op *evaluationRuleOp) Update(ctx context.Context, id string, req v1.EvaluationRuleInput) (*v1.EvaluationRule, error) {
+func (op *evaluationRuleOp) Update(ctx context.Context, id string, req *v1.EvaluationRuleInput) (*v1.EvaluationRule, error) {
 	const methodName = "EvaluationRules.Update"
 
-	res, err := op.client.EvaluationRulesUpdate(ctx, &req, v1.EvaluationRulesUpdateParams{EvaluationRuleId: v1.EvaluationRuleID(id)})
+	res, err := op.client.EvaluationRulesUpdate(ctx, req, v1.EvaluationRulesUpdateParams{EvaluationRuleId: v1.EvaluationRuleID(id)})
 	if err != nil {
 		return nil, NewAPIError(methodName, 0, err)
 	}
@@ -111,10 +111,10 @@ type EvaluationRuleInputParams struct {
 	Enabled            bool
 }
 
-func SetupEvaluationRuleInput(params *EvaluationRuleInputParams) v1.EvaluationRuleInput {
+func SetupEvaluationRuleInput(params *EvaluationRuleInputParams) *v1.EvaluationRuleInput {
 	switch params.ID {
 	case "server-no-public-ip":
-		return v1.EvaluationRuleInput{
+		return &v1.EvaluationRuleInput{
 			IsEnabled: params.Enabled,
 			Rule: v1.EvaluationRuleUnion{
 				OneOf: v1.EvaluationRuleUnionSum{
@@ -132,7 +132,7 @@ func SetupEvaluationRuleInput(params *EvaluationRuleInputParams) v1.EvaluationRu
 			},
 		}
 	case "disk-encryption-enabled":
-		return v1.EvaluationRuleInput{
+		return &v1.EvaluationRuleInput{
 			IsEnabled: params.Enabled,
 			Rule: v1.EvaluationRuleUnion{
 				OneOf: v1.EvaluationRuleUnionSum{
@@ -150,7 +150,7 @@ func SetupEvaluationRuleInput(params *EvaluationRuleInputParams) v1.EvaluationRu
 			},
 		}
 	case "dba-encryption-enabled":
-		return v1.EvaluationRuleInput{
+		return &v1.EvaluationRuleInput{
 			IsEnabled: params.Enabled,
 			Rule: v1.EvaluationRuleUnion{
 				OneOf: v1.EvaluationRuleUnionSum{
@@ -168,7 +168,7 @@ func SetupEvaluationRuleInput(params *EvaluationRuleInputParams) v1.EvaluationRu
 			},
 		}
 	case "dba-no-public-ip":
-		return v1.EvaluationRuleInput{
+		return &v1.EvaluationRuleInput{
 			IsEnabled: params.Enabled,
 			Rule: v1.EvaluationRuleUnion{
 				OneOf: v1.EvaluationRuleUnionSum{
@@ -186,7 +186,7 @@ func SetupEvaluationRuleInput(params *EvaluationRuleInputParams) v1.EvaluationRu
 			},
 		}
 	case "objectstorage-bucket-acl-changed":
-		return v1.EvaluationRuleInput{
+		return &v1.EvaluationRuleInput{
 			IsEnabled: params.Enabled,
 			Rule: v1.EvaluationRuleUnion{
 				OneOf: v1.EvaluationRuleUnionSum{
@@ -203,7 +203,7 @@ func SetupEvaluationRuleInput(params *EvaluationRuleInputParams) v1.EvaluationRu
 			},
 		}
 	case "addon-datalake-no-public-access":
-		return v1.EvaluationRuleInput{
+		return &v1.EvaluationRuleInput{
 			IsEnabled: params.Enabled,
 			Rule: v1.EvaluationRuleUnion{
 				OneOf: v1.EvaluationRuleUnionSum{
@@ -220,7 +220,7 @@ func SetupEvaluationRuleInput(params *EvaluationRuleInputParams) v1.EvaluationRu
 			},
 		}
 	case "addon-dwh-no-public-access":
-		return v1.EvaluationRuleInput{
+		return &v1.EvaluationRuleInput{
 			IsEnabled: params.Enabled,
 			Rule: v1.EvaluationRuleUnion{
 				OneOf: v1.EvaluationRuleUnionSum{
@@ -237,7 +237,7 @@ func SetupEvaluationRuleInput(params *EvaluationRuleInputParams) v1.EvaluationRu
 			},
 		}
 	case "addon-threat-detection-enabled":
-		return v1.EvaluationRuleInput{
+		return &v1.EvaluationRuleInput{
 			IsEnabled: params.Enabled,
 			Rule: v1.EvaluationRuleUnion{
 				OneOf: v1.EvaluationRuleUnionSum{
@@ -255,7 +255,7 @@ func SetupEvaluationRuleInput(params *EvaluationRuleInputParams) v1.EvaluationRu
 			},
 		}
 	case "addon-threat-detections":
-		return v1.EvaluationRuleInput{
+		return &v1.EvaluationRuleInput{
 			IsEnabled: params.Enabled,
 			Rule: v1.EvaluationRuleUnion{
 				OneOf: v1.EvaluationRuleUnionSum{
@@ -267,7 +267,7 @@ func SetupEvaluationRuleInput(params *EvaluationRuleInputParams) v1.EvaluationRu
 			},
 		}
 	case "addon-vulnerability-detections":
-		return v1.EvaluationRuleInput{
+		return &v1.EvaluationRuleInput{
 			IsEnabled: params.Enabled,
 			Rule: v1.EvaluationRuleUnion{
 				OneOf: v1.EvaluationRuleUnionSum{
@@ -279,7 +279,7 @@ func SetupEvaluationRuleInput(params *EvaluationRuleInputParams) v1.EvaluationRu
 			},
 		}
 	case "elb-logging-enabled":
-		return v1.EvaluationRuleInput{
+		return &v1.EvaluationRuleInput{
 			IsEnabled: params.Enabled,
 			Rule: v1.EvaluationRuleUnion{
 				OneOf: v1.EvaluationRuleUnionSum{
@@ -296,7 +296,7 @@ func SetupEvaluationRuleInput(params *EvaluationRuleInputParams) v1.EvaluationRu
 			},
 		}
 	case "iam-member-operation-detected":
-		return v1.EvaluationRuleInput{
+		return &v1.EvaluationRuleInput{
 			IsEnabled: params.Enabled,
 			Rule: v1.EvaluationRuleUnion{
 				OneOf: v1.EvaluationRuleUnionSum{
@@ -313,7 +313,7 @@ func SetupEvaluationRuleInput(params *EvaluationRuleInputParams) v1.EvaluationRu
 			},
 		}
 	case "nosql-encryption-enabled":
-		return v1.EvaluationRuleInput{
+		return &v1.EvaluationRuleInput{
 			IsEnabled: params.Enabled,
 			Rule: v1.EvaluationRuleUnion{
 				OneOf: v1.EvaluationRuleUnionSum{
