@@ -3,6 +3,9 @@
 ## [v0.2.1](https://github.com/sacloud/security-control-api-go/compare/v0.2.0...v0.2.1) - 2026-01-22
 - ActivationsAPI renamed to ActivationAPI by @repeatedly in https://github.com/sacloud/security-control-api-go/pull/10
 
+## [v0.2.1](https://github.com/sacloud/security-control-api-go/compare/v0.2.0...v0.2.1) - 2026-01-22
+- ActivationsAPI renamed to ActivationAPI by @repeatedly in https://github.com/sacloud/security-control-api-go/pull/10
+
 ## [v0.2.0](https://github.com/sacloud/security-control-api-go/compare/v0.1.0...v0.2.0) - 2026-01-20
 - evaluation_rules: Add helper for EvaluationRuleInput by @repeatedly in https://github.com/sacloud/security-control-api-go/pull/5
 - evaluation_rules: Use point for input parameter by @repeatedly in https://github.com/sacloud/security-control-api-go/pull/6
