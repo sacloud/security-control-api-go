@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestActivationsAPI(t *testing.T) {
+func TestActivationAPI(t *testing.T) {
 	testutil.PreCheckEnvsFunc("SAKURA_ACCESS_TOKEN", "SAKURA_ACCESS_TOKEN_SECRET", "SAKURA_SERVICE_PRINCIPAL_ID")(t)
 
 	ctx := t.Context()
@@ -22,7 +22,7 @@ func TestActivationsAPI(t *testing.T) {
 	client, err := securitycontrol.NewClient(&theClient)
 	require.NoError(t, err)
 
-	actOp := securitycontrol.NewActivationsOp(client)
+	actOp := securitycontrol.NewActivationOp(client)
 	respRead, err := actOp.Read(ctx)
 	if saclient.IsNotFoundError(err) { // アクティベーションされてないアカウントではReadで404が返るため、それを利用してCreateをテスト
 		created, err := actOp.Create(ctx, os.Getenv("SAKURA_SERVICE_PRINCIPAL_ID"))
