@@ -969,6 +969,8 @@ func (s EvaluationRuleID) Validate() error {
 		return nil
 	case "objectstorage-bucket-acl-changed":
 		return nil
+	case "objectstorage-bucket-encryption-enabled":
+		return nil
 	case "addon-datalake-no-public-access":
 		return nil
 	case "addon-dwh-no-public-access":
@@ -1060,6 +1062,11 @@ func (s EvaluationRuleUnionSum) Validate() error {
 		return nil
 	case ObjectStorageBucketACLChangedEvaluationRuleUnionSum:
 		if err := s.ObjectStorageBucketACLChanged.Validate(); err != nil {
+			return err
+		}
+		return nil
+	case ObjectStorageBucketEncryptionEnabledEvaluationRuleUnionSum:
+		if err := s.ObjectStorageBucketEncryptionEnabled.Validate(); err != nil {
 			return err
 		}
 		return nil
@@ -1594,6 +1601,38 @@ func (s *ObjectStorageBucketACLChanged) Validate() error {
 func (s ObjectStorageBucketACLChangedEvaluationRuleId) Validate() error {
 	switch s {
 	case "objectstorage-bucket-acl-changed":
+		return nil
+	default:
+		return errors.Errorf("invalid value: %v", s)
+	}
+}
+
+func (s *ObjectStorageBucketEncryptionEnabled) Validate() error {
+	if s == nil {
+		return validate.ErrNilPointer
+	}
+
+	var failures []validate.FieldError
+	if err := func() error {
+		if err := s.EvaluationRuleId.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "evaluationRuleId",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+
+func (s ObjectStorageBucketEncryptionEnabledEvaluationRuleId) Validate() error {
+	switch s {
+	case "objectstorage-bucket-encryption-enabled":
 		return nil
 	default:
 		return errors.Errorf("invalid value: %v", s)

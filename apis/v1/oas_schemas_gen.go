@@ -1802,19 +1802,20 @@ func (*EvaluationRule) evaluationRulesUpdateRes() {}
 type EvaluationRuleID string
 
 const (
-	EvaluationRuleIDServerNoPublicIP              EvaluationRuleID = "server-no-public-ip"
-	EvaluationRuleIDDiskEncryptionEnabled         EvaluationRuleID = "disk-encryption-enabled"
-	EvaluationRuleIDDbaEncryptionEnabled          EvaluationRuleID = "dba-encryption-enabled"
-	EvaluationRuleIDDbaNoPublicIP                 EvaluationRuleID = "dba-no-public-ip"
-	EvaluationRuleIDObjectstorageBucketACLChanged EvaluationRuleID = "objectstorage-bucket-acl-changed"
-	EvaluationRuleIDAddonDatalakeNoPublicAccess   EvaluationRuleID = "addon-datalake-no-public-access"
-	EvaluationRuleIDAddonDwhNoPublicAccess        EvaluationRuleID = "addon-dwh-no-public-access"
-	EvaluationRuleIDAddonThreatDetectionEnabled   EvaluationRuleID = "addon-threat-detection-enabled"
-	EvaluationRuleIDElbLoggingEnabled             EvaluationRuleID = "elb-logging-enabled"
-	EvaluationRuleIDIamMemberOperationDetected    EvaluationRuleID = "iam-member-operation-detected"
-	EvaluationRuleIDNosqlEncryptionEnabled        EvaluationRuleID = "nosql-encryption-enabled"
-	EvaluationRuleIDAddonThreatDetections         EvaluationRuleID = "addon-threat-detections"
-	EvaluationRuleIDAddonVulnerabilityDetections  EvaluationRuleID = "addon-vulnerability-detections"
+	EvaluationRuleIDServerNoPublicIP                     EvaluationRuleID = "server-no-public-ip"
+	EvaluationRuleIDDiskEncryptionEnabled                EvaluationRuleID = "disk-encryption-enabled"
+	EvaluationRuleIDDbaEncryptionEnabled                 EvaluationRuleID = "dba-encryption-enabled"
+	EvaluationRuleIDDbaNoPublicIP                        EvaluationRuleID = "dba-no-public-ip"
+	EvaluationRuleIDObjectstorageBucketACLChanged        EvaluationRuleID = "objectstorage-bucket-acl-changed"
+	EvaluationRuleIDObjectstorageBucketEncryptionEnabled EvaluationRuleID = "objectstorage-bucket-encryption-enabled"
+	EvaluationRuleIDAddonDatalakeNoPublicAccess          EvaluationRuleID = "addon-datalake-no-public-access"
+	EvaluationRuleIDAddonDwhNoPublicAccess               EvaluationRuleID = "addon-dwh-no-public-access"
+	EvaluationRuleIDAddonThreatDetectionEnabled          EvaluationRuleID = "addon-threat-detection-enabled"
+	EvaluationRuleIDElbLoggingEnabled                    EvaluationRuleID = "elb-logging-enabled"
+	EvaluationRuleIDIamMemberOperationDetected           EvaluationRuleID = "iam-member-operation-detected"
+	EvaluationRuleIDNosqlEncryptionEnabled               EvaluationRuleID = "nosql-encryption-enabled"
+	EvaluationRuleIDAddonThreatDetections                EvaluationRuleID = "addon-threat-detections"
+	EvaluationRuleIDAddonVulnerabilityDetections         EvaluationRuleID = "addon-vulnerability-detections"
 )
 
 // AllValues returns all EvaluationRuleID values.
@@ -1825,6 +1826,7 @@ func (EvaluationRuleID) AllValues() []EvaluationRuleID {
 		EvaluationRuleIDDbaEncryptionEnabled,
 		EvaluationRuleIDDbaNoPublicIP,
 		EvaluationRuleIDObjectstorageBucketACLChanged,
+		EvaluationRuleIDObjectstorageBucketEncryptionEnabled,
 		EvaluationRuleIDAddonDatalakeNoPublicAccess,
 		EvaluationRuleIDAddonDwhNoPublicAccess,
 		EvaluationRuleIDAddonThreatDetectionEnabled,
@@ -1848,6 +1850,8 @@ func (s EvaluationRuleID) MarshalText() ([]byte, error) {
 	case EvaluationRuleIDDbaNoPublicIP:
 		return []byte(s), nil
 	case EvaluationRuleIDObjectstorageBucketACLChanged:
+		return []byte(s), nil
+	case EvaluationRuleIDObjectstorageBucketEncryptionEnabled:
 		return []byte(s), nil
 	case EvaluationRuleIDAddonDatalakeNoPublicAccess:
 		return []byte(s), nil
@@ -1887,6 +1891,9 @@ func (s *EvaluationRuleID) UnmarshalText(data []byte) error {
 		return nil
 	case EvaluationRuleIDObjectstorageBucketACLChanged:
 		*s = EvaluationRuleIDObjectstorageBucketACLChanged
+		return nil
+	case EvaluationRuleIDObjectstorageBucketEncryptionEnabled:
+		*s = EvaluationRuleIDObjectstorageBucketEncryptionEnabled
 		return nil
 	case EvaluationRuleIDAddonDatalakeNoPublicAccess:
 		*s = EvaluationRuleIDAddonDatalakeNoPublicAccess
@@ -1962,6 +1969,37 @@ func (s *EvaluationRuleParametersEvaluationTarget) SetServicePrincipalId(val Opt
 	s.ServicePrincipalId = val
 }
 
+// サービスプリンシパルIDと評価対象のオブジェクトストレージ用サイト配列を要求するパラメータ。
+// オブジェクトストレージに関連する評価ルールで使用される。
+// `sites == []` の場合は「全サイト対象」の意味。.
+// Ref: #/components/schemas/EvaluationRuleParameters.ObjectStorageEvaluationTarget
+type EvaluationRuleParametersObjectStorageEvaluationTarget struct {
+	// 評価対象リソースに対する読み取り権限を持つサービスプリンシパルのID。未指定の場合はセキュリティコントロール有効化時に設定されたサービスプリンシパルが使用される。.
+	ServicePrincipalId OptString `json:"servicePrincipalId"`
+	// 評価対象のオブジェクトストレージ用サイトを指定。未指定または空配列の場合はすべてのサイトが対象となる。.
+	Sites []string `json:"sites"`
+}
+
+// GetServicePrincipalId returns the value of ServicePrincipalId.
+func (s *EvaluationRuleParametersObjectStorageEvaluationTarget) GetServicePrincipalId() OptString {
+	return s.ServicePrincipalId
+}
+
+// GetSites returns the value of Sites.
+func (s *EvaluationRuleParametersObjectStorageEvaluationTarget) GetSites() []string {
+	return s.Sites
+}
+
+// SetServicePrincipalId sets the value of ServicePrincipalId.
+func (s *EvaluationRuleParametersObjectStorageEvaluationTarget) SetServicePrincipalId(val OptString) {
+	s.ServicePrincipalId = val
+}
+
+// SetSites sets the value of Sites.
+func (s *EvaluationRuleParametersObjectStorageEvaluationTarget) SetSites(val []string) {
+	s.Sites = val
+}
+
 // サービスプリンシパルIDと評価対象ゾーン配列を要求するパラメータ。
 // `zones == []` の場合は「全ゾーン対象」の意味。.
 // Ref: #/components/schemas/EvaluationRuleParameters.ZonedEvaluationTarget
@@ -2009,20 +2047,21 @@ func (s *EvaluationRuleUnion) SetOneOf(val EvaluationRuleUnionSum) {
 
 // EvaluationRuleUnionSum represents sum type.
 type EvaluationRuleUnionSum struct {
-	Type                          EvaluationRuleUnionSumType // switch on this field
-	ServerNoPublicIP              ServerNoPublicIP
-	DiskEncryptionEnabled         DiskEncryptionEnabled
-	DbaEncryptionEnabled          DbaEncryptionEnabled
-	DbaNoPublicIP                 DbaNoPublicIP
-	ObjectStorageBucketACLChanged ObjectStorageBucketACLChanged
-	AddonDatalakeNoPublicAccess   AddonDatalakeNoPublicAccess
-	AddonDwhNoPublicAccess        AddonDwhNoPublicAccess
-	AddonThreatDetectionEnabled   AddonThreatDetectionEnabled
-	ELBLoggingEnabled             ELBLoggingEnabled
-	IAMMemberOperationDetected    IAMMemberOperationDetected
-	NoSQLEncryptionEnabled        NoSQLEncryptionEnabled
-	AddonThreatDetections         AddonThreatDetections
-	AddonVulnerabilityDetections  AddonVulnerabilityDetections
+	Type                                 EvaluationRuleUnionSumType // switch on this field
+	ServerNoPublicIP                     ServerNoPublicIP
+	DiskEncryptionEnabled                DiskEncryptionEnabled
+	DbaEncryptionEnabled                 DbaEncryptionEnabled
+	DbaNoPublicIP                        DbaNoPublicIP
+	ObjectStorageBucketACLChanged        ObjectStorageBucketACLChanged
+	ObjectStorageBucketEncryptionEnabled ObjectStorageBucketEncryptionEnabled
+	AddonDatalakeNoPublicAccess          AddonDatalakeNoPublicAccess
+	AddonDwhNoPublicAccess               AddonDwhNoPublicAccess
+	AddonThreatDetectionEnabled          AddonThreatDetectionEnabled
+	ELBLoggingEnabled                    ELBLoggingEnabled
+	IAMMemberOperationDetected           IAMMemberOperationDetected
+	NoSQLEncryptionEnabled               NoSQLEncryptionEnabled
+	AddonThreatDetections                AddonThreatDetections
+	AddonVulnerabilityDetections         AddonVulnerabilityDetections
 }
 
 // EvaluationRuleUnionSumType is oneOf type of EvaluationRuleUnionSum.
@@ -2030,19 +2069,20 @@ type EvaluationRuleUnionSumType string
 
 // Possible values for EvaluationRuleUnionSumType.
 const (
-	ServerNoPublicIPEvaluationRuleUnionSum              EvaluationRuleUnionSumType = "server-no-public-ip"
-	DiskEncryptionEnabledEvaluationRuleUnionSum         EvaluationRuleUnionSumType = "disk-encryption-enabled"
-	DbaEncryptionEnabledEvaluationRuleUnionSum          EvaluationRuleUnionSumType = "dba-encryption-enabled"
-	DbaNoPublicIPEvaluationRuleUnionSum                 EvaluationRuleUnionSumType = "dba-no-public-ip"
-	ObjectStorageBucketACLChangedEvaluationRuleUnionSum EvaluationRuleUnionSumType = "objectstorage-bucket-acl-changed"
-	AddonDatalakeNoPublicAccessEvaluationRuleUnionSum   EvaluationRuleUnionSumType = "addon-datalake-no-public-access"
-	AddonDwhNoPublicAccessEvaluationRuleUnionSum        EvaluationRuleUnionSumType = "addon-dwh-no-public-access"
-	AddonThreatDetectionEnabledEvaluationRuleUnionSum   EvaluationRuleUnionSumType = "addon-threat-detection-enabled"
-	ELBLoggingEnabledEvaluationRuleUnionSum             EvaluationRuleUnionSumType = "elb-logging-enabled"
-	IAMMemberOperationDetectedEvaluationRuleUnionSum    EvaluationRuleUnionSumType = "iam-member-operation-detected"
-	NoSQLEncryptionEnabledEvaluationRuleUnionSum        EvaluationRuleUnionSumType = "nosql-encryption-enabled"
-	AddonThreatDetectionsEvaluationRuleUnionSum         EvaluationRuleUnionSumType = "addon-threat-detections"
-	AddonVulnerabilityDetectionsEvaluationRuleUnionSum  EvaluationRuleUnionSumType = "addon-vulnerability-detections"
+	ServerNoPublicIPEvaluationRuleUnionSum                     EvaluationRuleUnionSumType = "server-no-public-ip"
+	DiskEncryptionEnabledEvaluationRuleUnionSum                EvaluationRuleUnionSumType = "disk-encryption-enabled"
+	DbaEncryptionEnabledEvaluationRuleUnionSum                 EvaluationRuleUnionSumType = "dba-encryption-enabled"
+	DbaNoPublicIPEvaluationRuleUnionSum                        EvaluationRuleUnionSumType = "dba-no-public-ip"
+	ObjectStorageBucketACLChangedEvaluationRuleUnionSum        EvaluationRuleUnionSumType = "objectstorage-bucket-acl-changed"
+	ObjectStorageBucketEncryptionEnabledEvaluationRuleUnionSum EvaluationRuleUnionSumType = "objectstorage-bucket-encryption-enabled"
+	AddonDatalakeNoPublicAccessEvaluationRuleUnionSum          EvaluationRuleUnionSumType = "addon-datalake-no-public-access"
+	AddonDwhNoPublicAccessEvaluationRuleUnionSum               EvaluationRuleUnionSumType = "addon-dwh-no-public-access"
+	AddonThreatDetectionEnabledEvaluationRuleUnionSum          EvaluationRuleUnionSumType = "addon-threat-detection-enabled"
+	ELBLoggingEnabledEvaluationRuleUnionSum                    EvaluationRuleUnionSumType = "elb-logging-enabled"
+	IAMMemberOperationDetectedEvaluationRuleUnionSum           EvaluationRuleUnionSumType = "iam-member-operation-detected"
+	NoSQLEncryptionEnabledEvaluationRuleUnionSum               EvaluationRuleUnionSumType = "nosql-encryption-enabled"
+	AddonThreatDetectionsEvaluationRuleUnionSum                EvaluationRuleUnionSumType = "addon-threat-detections"
+	AddonVulnerabilityDetectionsEvaluationRuleUnionSum         EvaluationRuleUnionSumType = "addon-vulnerability-detections"
 )
 
 // IsServerNoPublicIP reports whether EvaluationRuleUnionSum is ServerNoPublicIP.
@@ -2068,6 +2108,11 @@ func (s EvaluationRuleUnionSum) IsDbaNoPublicIP() bool {
 // IsObjectStorageBucketACLChanged reports whether EvaluationRuleUnionSum is ObjectStorageBucketACLChanged.
 func (s EvaluationRuleUnionSum) IsObjectStorageBucketACLChanged() bool {
 	return s.Type == ObjectStorageBucketACLChangedEvaluationRuleUnionSum
+}
+
+// IsObjectStorageBucketEncryptionEnabled reports whether EvaluationRuleUnionSum is ObjectStorageBucketEncryptionEnabled.
+func (s EvaluationRuleUnionSum) IsObjectStorageBucketEncryptionEnabled() bool {
+	return s.Type == ObjectStorageBucketEncryptionEnabledEvaluationRuleUnionSum
 }
 
 // IsAddonDatalakeNoPublicAccess reports whether EvaluationRuleUnionSum is AddonDatalakeNoPublicAccess.
@@ -2212,6 +2257,27 @@ func (s EvaluationRuleUnionSum) GetObjectStorageBucketACLChanged() (v ObjectStor
 func NewObjectStorageBucketACLChangedEvaluationRuleUnionSum(v ObjectStorageBucketACLChanged) EvaluationRuleUnionSum {
 	var s EvaluationRuleUnionSum
 	s.SetObjectStorageBucketACLChanged(v)
+	return s
+}
+
+// SetObjectStorageBucketEncryptionEnabled sets EvaluationRuleUnionSum to ObjectStorageBucketEncryptionEnabled.
+func (s *EvaluationRuleUnionSum) SetObjectStorageBucketEncryptionEnabled(v ObjectStorageBucketEncryptionEnabled) {
+	s.Type = ObjectStorageBucketEncryptionEnabledEvaluationRuleUnionSum
+	s.ObjectStorageBucketEncryptionEnabled = v
+}
+
+// GetObjectStorageBucketEncryptionEnabled returns ObjectStorageBucketEncryptionEnabled and true boolean if EvaluationRuleUnionSum is ObjectStorageBucketEncryptionEnabled.
+func (s EvaluationRuleUnionSum) GetObjectStorageBucketEncryptionEnabled() (v ObjectStorageBucketEncryptionEnabled, ok bool) {
+	if !s.IsObjectStorageBucketEncryptionEnabled() {
+		return v, false
+	}
+	return s.ObjectStorageBucketEncryptionEnabled, true
+}
+
+// NewObjectStorageBucketEncryptionEnabledEvaluationRuleUnionSum returns new EvaluationRuleUnionSum from ObjectStorageBucketEncryptionEnabled.
+func NewObjectStorageBucketEncryptionEnabledEvaluationRuleUnionSum(v ObjectStorageBucketEncryptionEnabled) EvaluationRuleUnionSum {
+	var s EvaluationRuleUnionSum
+	s.SetObjectStorageBucketEncryptionEnabled(v)
 	return s
 }
 
@@ -3168,6 +3234,66 @@ func (s *ObjectStorageBucketACLChangedEvaluationRuleId) UnmarshalText(data []byt
 	}
 }
 
+// Ref: #/components/schemas/ObjectStorageBucketEncryptionEnabled
+type ObjectStorageBucketEncryptionEnabled struct {
+	EvaluationRuleId ObjectStorageBucketEncryptionEnabledEvaluationRuleId     `json:"evaluationRuleId"`
+	Parameter        OptEvaluationRuleParametersObjectStorageEvaluationTarget `json:"parameter"`
+}
+
+// GetEvaluationRuleId returns the value of EvaluationRuleId.
+func (s *ObjectStorageBucketEncryptionEnabled) GetEvaluationRuleId() ObjectStorageBucketEncryptionEnabledEvaluationRuleId {
+	return s.EvaluationRuleId
+}
+
+// GetParameter returns the value of Parameter.
+func (s *ObjectStorageBucketEncryptionEnabled) GetParameter() OptEvaluationRuleParametersObjectStorageEvaluationTarget {
+	return s.Parameter
+}
+
+// SetEvaluationRuleId sets the value of EvaluationRuleId.
+func (s *ObjectStorageBucketEncryptionEnabled) SetEvaluationRuleId(val ObjectStorageBucketEncryptionEnabledEvaluationRuleId) {
+	s.EvaluationRuleId = val
+}
+
+// SetParameter sets the value of Parameter.
+func (s *ObjectStorageBucketEncryptionEnabled) SetParameter(val OptEvaluationRuleParametersObjectStorageEvaluationTarget) {
+	s.Parameter = val
+}
+
+type ObjectStorageBucketEncryptionEnabledEvaluationRuleId string
+
+const (
+	ObjectStorageBucketEncryptionEnabledEvaluationRuleIdObjectstorageBucketEncryptionEnabled ObjectStorageBucketEncryptionEnabledEvaluationRuleId = "objectstorage-bucket-encryption-enabled"
+)
+
+// AllValues returns all ObjectStorageBucketEncryptionEnabledEvaluationRuleId values.
+func (ObjectStorageBucketEncryptionEnabledEvaluationRuleId) AllValues() []ObjectStorageBucketEncryptionEnabledEvaluationRuleId {
+	return []ObjectStorageBucketEncryptionEnabledEvaluationRuleId{
+		ObjectStorageBucketEncryptionEnabledEvaluationRuleIdObjectstorageBucketEncryptionEnabled,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s ObjectStorageBucketEncryptionEnabledEvaluationRuleId) MarshalText() ([]byte, error) {
+	switch s {
+	case ObjectStorageBucketEncryptionEnabledEvaluationRuleIdObjectstorageBucketEncryptionEnabled:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *ObjectStorageBucketEncryptionEnabledEvaluationRuleId) UnmarshalText(data []byte) error {
+	switch ObjectStorageBucketEncryptionEnabledEvaluationRuleId(data) {
+	case ObjectStorageBucketEncryptionEnabledEvaluationRuleIdObjectstorageBucketEncryptionEnabled:
+		*s = ObjectStorageBucketEncryptionEnabledEvaluationRuleIdObjectstorageBucketEncryptionEnabled
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
 // NewOptAutomatedActionsCreateTooManyRequestsRetryAfter returns new OptAutomatedActionsCreateTooManyRequestsRetryAfter with value set to v.
 func NewOptAutomatedActionsCreateTooManyRequestsRetryAfter(v AutomatedActionsCreateTooManyRequestsRetryAfter) OptAutomatedActionsCreateTooManyRequestsRetryAfter {
 	return OptAutomatedActionsCreateTooManyRequestsRetryAfter{
@@ -3576,6 +3702,52 @@ func (o OptEvaluationRuleParametersEvaluationTarget) Get() (v EvaluationRulePara
 
 // Or returns value if set, or given parameter if does not.
 func (o OptEvaluationRuleParametersEvaluationTarget) Or(d EvaluationRuleParametersEvaluationTarget) EvaluationRuleParametersEvaluationTarget {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptEvaluationRuleParametersObjectStorageEvaluationTarget returns new OptEvaluationRuleParametersObjectStorageEvaluationTarget with value set to v.
+func NewOptEvaluationRuleParametersObjectStorageEvaluationTarget(v EvaluationRuleParametersObjectStorageEvaluationTarget) OptEvaluationRuleParametersObjectStorageEvaluationTarget {
+	return OptEvaluationRuleParametersObjectStorageEvaluationTarget{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptEvaluationRuleParametersObjectStorageEvaluationTarget is optional EvaluationRuleParametersObjectStorageEvaluationTarget.
+type OptEvaluationRuleParametersObjectStorageEvaluationTarget struct {
+	Value EvaluationRuleParametersObjectStorageEvaluationTarget
+	Set   bool
+}
+
+// IsSet returns true if OptEvaluationRuleParametersObjectStorageEvaluationTarget was set.
+func (o OptEvaluationRuleParametersObjectStorageEvaluationTarget) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptEvaluationRuleParametersObjectStorageEvaluationTarget) Reset() {
+	var v EvaluationRuleParametersObjectStorageEvaluationTarget
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptEvaluationRuleParametersObjectStorageEvaluationTarget) SetTo(v EvaluationRuleParametersObjectStorageEvaluationTarget) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptEvaluationRuleParametersObjectStorageEvaluationTarget) Get() (v EvaluationRuleParametersObjectStorageEvaluationTarget, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptEvaluationRuleParametersObjectStorageEvaluationTarget) Or(d EvaluationRuleParametersObjectStorageEvaluationTarget) EvaluationRuleParametersObjectStorageEvaluationTarget {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -4504,120 +4676,6 @@ type ProjectActivationReadApplicationProblemJSONUnauthorized Unauthorized
 
 func (*ProjectActivationReadApplicationProblemJSONUnauthorized) projectActivationReadRes() {}
 
-// TooManyRequestsRetryAfter represents sum type.
-type TooManyRequestsRetryAfter struct {
-	Type                TooManyRequestsRetryAfterType // switch on this field
-	ClientDelaySeconds  ClientDelaySeconds
-	ClientRetryDateTime ClientRetryDateTime
-}
-
-// TooManyRequestsRetryAfterType is oneOf type of TooManyRequestsRetryAfter.
-type TooManyRequestsRetryAfterType string
-
-// Possible values for TooManyRequestsRetryAfterType.
-const (
-	ClientDelaySecondsTooManyRequestsRetryAfter  TooManyRequestsRetryAfterType = "ClientDelaySeconds"
-	ClientRetryDateTimeTooManyRequestsRetryAfter TooManyRequestsRetryAfterType = "ClientRetryDateTime"
-)
-
-// IsClientDelaySeconds reports whether TooManyRequestsRetryAfter is ClientDelaySeconds.
-func (s TooManyRequestsRetryAfter) IsClientDelaySeconds() bool {
-	return s.Type == ClientDelaySecondsTooManyRequestsRetryAfter
-}
-
-// IsClientRetryDateTime reports whether TooManyRequestsRetryAfter is ClientRetryDateTime.
-func (s TooManyRequestsRetryAfter) IsClientRetryDateTime() bool {
-	return s.Type == ClientRetryDateTimeTooManyRequestsRetryAfter
-}
-
-// SetClientDelaySeconds sets TooManyRequestsRetryAfter to ClientDelaySeconds.
-func (s *TooManyRequestsRetryAfter) SetClientDelaySeconds(v ClientDelaySeconds) {
-	s.Type = ClientDelaySecondsTooManyRequestsRetryAfter
-	s.ClientDelaySeconds = v
-}
-
-// GetClientDelaySeconds returns ClientDelaySeconds and true boolean if TooManyRequestsRetryAfter is ClientDelaySeconds.
-func (s TooManyRequestsRetryAfter) GetClientDelaySeconds() (v ClientDelaySeconds, ok bool) {
-	if !s.IsClientDelaySeconds() {
-		return v, false
-	}
-	return s.ClientDelaySeconds, true
-}
-
-// NewClientDelaySecondsTooManyRequestsRetryAfter returns new TooManyRequestsRetryAfter from ClientDelaySeconds.
-func NewClientDelaySecondsTooManyRequestsRetryAfter(v ClientDelaySeconds) TooManyRequestsRetryAfter {
-	var s TooManyRequestsRetryAfter
-	s.SetClientDelaySeconds(v)
-	return s
-}
-
-// SetClientRetryDateTime sets ProjectActivationReadTooManyRequestsRetryAfter to ClientRetryDateTime.
-func (s *TooManyRequestsRetryAfter) SetClientRetryDateTime(v ClientRetryDateTime) {
-	s.Type = ClientRetryDateTimeTooManyRequestsRetryAfter
-	s.ClientRetryDateTime = v
-}
-
-// GetClientRetryDateTime returns ClientRetryDateTime and true boolean if ProjectActivationReadTooManyRequestsRetryAfter is ClientRetryDateTime.
-func (s TooManyRequestsRetryAfter) GetClientRetryDateTime() (v ClientRetryDateTime, ok bool) {
-	if !s.IsClientRetryDateTime() {
-		return v, false
-	}
-	return s.ClientRetryDateTime, true
-}
-
-// NewClientRetryDateTimeTooManyRequestsRetryAfter returns new TooManyRequestsRetryAfter from ClientRetryDateTime.
-func NewClientRetryDateTimeTooManyRequestsRetryAfter(v ClientRetryDateTime) TooManyRequestsRetryAfter {
-	var s TooManyRequestsRetryAfter
-	s.SetClientRetryDateTime(v)
-	return s
-}
-
-// NewOptTooManyRequestsRetryAfter returns new OptTooManyRequestsRetryAfter with value set to v.
-func NewOptTooManyRequestsRetryAfter(v TooManyRequestsRetryAfter) OptTooManyRequestsRetryAfter {
-	return OptTooManyRequestsRetryAfter{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptTooManyRequestsRetryAfter is optional TooManyRequestsRetryAfter.
-type OptTooManyRequestsRetryAfter struct {
-	Value TooManyRequestsRetryAfter
-	Set   bool
-}
-
-// IsSet returns true if OptTooManyRequestsRetryAfter was set.
-func (o OptTooManyRequestsRetryAfter) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptTooManyRequestsRetryAfter) Reset() {
-	var v TooManyRequestsRetryAfter
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptTooManyRequestsRetryAfter) SetTo(v TooManyRequestsRetryAfter) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptTooManyRequestsRetryAfter) Get() (v TooManyRequestsRetryAfter, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptTooManyRequestsRetryAfter) Or(d TooManyRequestsRetryAfter) TooManyRequestsRetryAfter {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
 // ProjectActivationReadTooManyRequestsRetryAfter represents sum type.
 type ProjectActivationReadTooManyRequestsRetryAfter struct {
 	Type                ProjectActivationReadTooManyRequestsRetryAfterType // switch on this field
@@ -5071,7 +5129,6 @@ func (s *TooManyRequestsDetail) UnmarshalText(data []byte) error {
 
 // TooManyRequestsHeaders wraps TooManyRequests with response headers.
 type TooManyRequestsHeaders struct {
-	//RetryAfter OptProjectActivationReadTooManyRequestsRetryAfter
 	RetryAfter OptTooManyRequestsRetryAfter
 	Response   TooManyRequests
 }
@@ -5328,3 +5385,117 @@ func (*UnexpectedErrorStatusCode) evaluationRulesUpdateRes()   {}
 func (*UnexpectedErrorStatusCode) projectActivationCreateRes() {}
 func (*UnexpectedErrorStatusCode) projectActivationReadRes()   {}
 func (*UnexpectedErrorStatusCode) projectActivationUpdateRes() {}
+
+// TooManyRequestsRetryAfter represents sum type.
+type TooManyRequestsRetryAfter struct {
+	Type                TooManyRequestsRetryAfterType // switch on this field
+	ClientDelaySeconds  ClientDelaySeconds
+	ClientRetryDateTime ClientRetryDateTime
+}
+
+// TooManyRequestsRetryAfterType is oneOf type of TooManyRequestsRetryAfter.
+type TooManyRequestsRetryAfterType string
+
+// Possible values for TooManyRequestsRetryAfterType.
+const (
+	ClientDelaySecondsTooManyRequestsRetryAfter  TooManyRequestsRetryAfterType = "ClientDelaySeconds"
+	ClientRetryDateTimeTooManyRequestsRetryAfter TooManyRequestsRetryAfterType = "ClientRetryDateTime"
+)
+
+// IsClientDelaySeconds reports whether TooManyRequestsRetryAfter is ClientDelaySeconds.
+func (s TooManyRequestsRetryAfter) IsClientDelaySeconds() bool {
+	return s.Type == ClientDelaySecondsTooManyRequestsRetryAfter
+}
+
+// IsClientRetryDateTime reports whether TooManyRequestsRetryAfter is ClientRetryDateTime.
+func (s TooManyRequestsRetryAfter) IsClientRetryDateTime() bool {
+	return s.Type == ClientRetryDateTimeTooManyRequestsRetryAfter
+}
+
+// SetClientDelaySeconds sets TooManyRequestsRetryAfter to ClientDelaySeconds.
+func (s *TooManyRequestsRetryAfter) SetClientDelaySeconds(v ClientDelaySeconds) {
+	s.Type = ClientDelaySecondsTooManyRequestsRetryAfter
+	s.ClientDelaySeconds = v
+}
+
+// GetClientDelaySeconds returns ClientDelaySeconds and true boolean if TooManyRequestsRetryAfter is ClientDelaySeconds.
+func (s TooManyRequestsRetryAfter) GetClientDelaySeconds() (v ClientDelaySeconds, ok bool) {
+	if !s.IsClientDelaySeconds() {
+		return v, false
+	}
+	return s.ClientDelaySeconds, true
+}
+
+// NewClientDelaySecondsTooManyRequestsRetryAfter returns new TooManyRequestsRetryAfter from ClientDelaySeconds.
+func NewClientDelaySecondsTooManyRequestsRetryAfter(v ClientDelaySeconds) TooManyRequestsRetryAfter {
+	var s TooManyRequestsRetryAfter
+	s.SetClientDelaySeconds(v)
+	return s
+}
+
+// SetClientRetryDateTime sets ProjectActivationReadTooManyRequestsRetryAfter to ClientRetryDateTime.
+func (s *TooManyRequestsRetryAfter) SetClientRetryDateTime(v ClientRetryDateTime) {
+	s.Type = ClientRetryDateTimeTooManyRequestsRetryAfter
+	s.ClientRetryDateTime = v
+}
+
+// GetClientRetryDateTime returns ClientRetryDateTime and true boolean if ProjectActivationReadTooManyRequestsRetryAfter is ClientRetryDateTime.
+func (s TooManyRequestsRetryAfter) GetClientRetryDateTime() (v ClientRetryDateTime, ok bool) {
+	if !s.IsClientRetryDateTime() {
+		return v, false
+	}
+	return s.ClientRetryDateTime, true
+}
+
+// NewClientRetryDateTimeTooManyRequestsRetryAfter returns new TooManyRequestsRetryAfter from ClientRetryDateTime.
+func NewClientRetryDateTimeTooManyRequestsRetryAfter(v ClientRetryDateTime) TooManyRequestsRetryAfter {
+	var s TooManyRequestsRetryAfter
+	s.SetClientRetryDateTime(v)
+	return s
+}
+
+// NewOptTooManyRequestsRetryAfter returns new OptTooManyRequestsRetryAfter with value set to v.
+func NewOptTooManyRequestsRetryAfter(v TooManyRequestsRetryAfter) OptTooManyRequestsRetryAfter {
+	return OptTooManyRequestsRetryAfter{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptTooManyRequestsRetryAfter is optional TooManyRequestsRetryAfter.
+type OptTooManyRequestsRetryAfter struct {
+	Value TooManyRequestsRetryAfter
+	Set   bool
+}
+
+// IsSet returns true if OptTooManyRequestsRetryAfter was set.
+func (o OptTooManyRequestsRetryAfter) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptTooManyRequestsRetryAfter) Reset() {
+	var v TooManyRequestsRetryAfter
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptTooManyRequestsRetryAfter) SetTo(v TooManyRequestsRetryAfter) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptTooManyRequestsRetryAfter) Get() (v TooManyRequestsRetryAfter, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptTooManyRequestsRetryAfter) Or(d TooManyRequestsRetryAfter) TooManyRequestsRetryAfter {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}

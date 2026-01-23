@@ -3,7 +3,6 @@
 package v1
 
 import (
-	"fmt"
 	"io"
 	"mime"
 	"net/http"
@@ -2962,7 +2961,6 @@ func decodeEvaluationRulesListResponse(resp *http.Response) (res EvaluationRules
 			if err != nil {
 				return res, err
 			}
-			fmt.Printf("body: %s\n", string(buf))
 			d := jx.DecodeBytes(buf)
 
 			var response EvaluationRulesListApplicationJSONUnauthorized

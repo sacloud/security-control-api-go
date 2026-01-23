@@ -777,6 +777,27 @@ func (s *EvaluationRuleParametersEvaluationTarget) SetFake() {
 }
 
 // SetFake set fake values.
+func (s *EvaluationRuleParametersObjectStorageEvaluationTarget) SetFake() {
+	{
+		{
+			s.ServicePrincipalId.SetFake()
+		}
+	}
+	{
+		{
+			s.Sites = nil
+			for i := 0; i < 0; i++ {
+				var elem string
+				{
+					elem = "string"
+				}
+				s.Sites = append(s.Sites, elem)
+			}
+		}
+	}
+}
+
+// SetFake set fake values.
 func (s *EvaluationRuleParametersZonedEvaluationTarget) SetFake() {
 	{
 		{
@@ -1181,6 +1202,25 @@ func (s *ObjectStorageBucketACLChangedEvaluationRuleId) SetFake() {
 }
 
 // SetFake set fake values.
+func (s *ObjectStorageBucketEncryptionEnabled) SetFake() {
+	{
+		{
+			s.EvaluationRuleId.SetFake()
+		}
+	}
+	{
+		{
+			s.Parameter.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *ObjectStorageBucketEncryptionEnabledEvaluationRuleId) SetFake() {
+	*s = ObjectStorageBucketEncryptionEnabledEvaluationRuleIdObjectstorageBucketEncryptionEnabled
+}
+
+// SetFake set fake values.
 func (s *OptBadRequestDetail) SetFake() {
 	var elem BadRequestDetail
 	{
@@ -1219,6 +1259,15 @@ func (s *OptConflictStatus) SetFake() {
 // SetFake set fake values.
 func (s *OptEvaluationRuleParametersEvaluationTarget) SetFake() {
 	var elem EvaluationRuleParametersEvaluationTarget
+	{
+		elem.SetFake()
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
+func (s *OptEvaluationRuleParametersObjectStorageEvaluationTarget) SetFake() {
+	var elem EvaluationRuleParametersObjectStorageEvaluationTarget
 	{
 		elem.SetFake()
 	}
