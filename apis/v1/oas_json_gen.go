@@ -4531,6 +4531,99 @@ func (s *EvaluationRuleParametersEvaluationTarget) UnmarshalJSON(data []byte) er
 }
 
 // Encode implements json.Marshaler.
+func (s *EvaluationRuleParametersObjectStorageEvaluationTarget) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *EvaluationRuleParametersObjectStorageEvaluationTarget) encodeFields(e *jx.Encoder) {
+	{
+		if s.ServicePrincipalId.Set {
+			e.FieldStart("servicePrincipalId")
+			s.ServicePrincipalId.Encode(e)
+		}
+	}
+	{
+		if s.Sites != nil {
+			e.FieldStart("sites")
+			e.ArrStart()
+			for _, elem := range s.Sites {
+				e.Str(elem)
+			}
+			e.ArrEnd()
+		}
+	}
+}
+
+var jsonFieldsNameOfEvaluationRuleParametersObjectStorageEvaluationTarget = [2]string{
+	0: "servicePrincipalId",
+	1: "sites",
+}
+
+// Decode decodes EvaluationRuleParametersObjectStorageEvaluationTarget from json.
+func (s *EvaluationRuleParametersObjectStorageEvaluationTarget) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode EvaluationRuleParametersObjectStorageEvaluationTarget to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "servicePrincipalId":
+			if err := func() error {
+				s.ServicePrincipalId.Reset()
+				if err := s.ServicePrincipalId.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"servicePrincipalId\"")
+			}
+		case "sites":
+			if err := func() error {
+				s.Sites = make([]string, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem string
+					v, err := d.Str()
+					elem = string(v)
+					if err != nil {
+						return err
+					}
+					s.Sites = append(s.Sites, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"sites\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode EvaluationRuleParametersObjectStorageEvaluationTarget")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *EvaluationRuleParametersObjectStorageEvaluationTarget) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *EvaluationRuleParametersObjectStorageEvaluationTarget) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
 func (s *EvaluationRuleParametersZonedEvaluationTarget) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
@@ -4742,6 +4835,18 @@ func (s EvaluationRuleUnionSum) encodeFields(e *jx.Encoder) {
 				}
 			}
 		}
+	case ObjectStorageBucketEncryptionEnabledEvaluationRuleUnionSum:
+		e.FieldStart("evaluationRuleId")
+		e.Str("objectstorage-bucket-encryption-enabled")
+		{
+			s := s.ObjectStorageBucketEncryptionEnabled
+			{
+				if s.Parameter.Set {
+					e.FieldStart("parameter")
+					s.Parameter.Encode(e)
+				}
+			}
+		}
 	case AddonDatalakeNoPublicAccessEvaluationRuleUnionSum:
 		e.FieldStart("evaluationRuleId")
 		e.Str("addon-datalake-no-public-access")
@@ -4861,6 +4966,9 @@ func (s *EvaluationRuleUnionSum) Decode(d *jx.Decoder) error {
 				case "objectstorage-bucket-acl-changed":
 					s.Type = ObjectStorageBucketACLChangedEvaluationRuleUnionSum
 					found = true
+				case "objectstorage-bucket-encryption-enabled":
+					s.Type = ObjectStorageBucketEncryptionEnabledEvaluationRuleUnionSum
+					found = true
 				case "addon-datalake-no-public-access":
 					s.Type = AddonDatalakeNoPublicAccessEvaluationRuleUnionSum
 					found = true
@@ -4917,6 +5025,10 @@ func (s *EvaluationRuleUnionSum) Decode(d *jx.Decoder) error {
 		}
 	case ObjectStorageBucketACLChangedEvaluationRuleUnionSum:
 		if err := s.ObjectStorageBucketACLChanged.Decode(d); err != nil {
+			return err
+		}
+	case ObjectStorageBucketEncryptionEnabledEvaluationRuleUnionSum:
+		if err := s.ObjectStorageBucketEncryptionEnabled.Decode(d); err != nil {
 			return err
 		}
 	case AddonDatalakeNoPublicAccessEvaluationRuleUnionSum:
@@ -6812,6 +6924,155 @@ func (s *ObjectStorageBucketACLChangedEvaluationRuleId) UnmarshalJSON(data []byt
 	return s.Decode(d)
 }
 
+// Encode implements json.Marshaler.
+func (s *ObjectStorageBucketEncryptionEnabled) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *ObjectStorageBucketEncryptionEnabled) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("evaluationRuleId")
+		s.EvaluationRuleId.Encode(e)
+	}
+	{
+		if s.Parameter.Set {
+			e.FieldStart("parameter")
+			s.Parameter.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfObjectStorageBucketEncryptionEnabled = [2]string{
+	0: "evaluationRuleId",
+	1: "parameter",
+}
+
+// Decode decodes ObjectStorageBucketEncryptionEnabled from json.
+func (s *ObjectStorageBucketEncryptionEnabled) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode ObjectStorageBucketEncryptionEnabled to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "evaluationRuleId":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				if err := s.EvaluationRuleId.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"evaluationRuleId\"")
+			}
+		case "parameter":
+			if err := func() error {
+				s.Parameter.Reset()
+				if err := s.Parameter.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"parameter\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode ObjectStorageBucketEncryptionEnabled")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000001,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfObjectStorageBucketEncryptionEnabled) {
+					name = jsonFieldsNameOfObjectStorageBucketEncryptionEnabled[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *ObjectStorageBucketEncryptionEnabled) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *ObjectStorageBucketEncryptionEnabled) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes ObjectStorageBucketEncryptionEnabledEvaluationRuleId as json.
+func (s ObjectStorageBucketEncryptionEnabledEvaluationRuleId) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes ObjectStorageBucketEncryptionEnabledEvaluationRuleId from json.
+func (s *ObjectStorageBucketEncryptionEnabledEvaluationRuleId) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode ObjectStorageBucketEncryptionEnabledEvaluationRuleId to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch ObjectStorageBucketEncryptionEnabledEvaluationRuleId(v) {
+	case ObjectStorageBucketEncryptionEnabledEvaluationRuleIdObjectstorageBucketEncryptionEnabled:
+		*s = ObjectStorageBucketEncryptionEnabledEvaluationRuleIdObjectstorageBucketEncryptionEnabled
+	default:
+		*s = ObjectStorageBucketEncryptionEnabledEvaluationRuleId(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s ObjectStorageBucketEncryptionEnabledEvaluationRuleId) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *ObjectStorageBucketEncryptionEnabledEvaluationRuleId) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes BadRequestDetail as json.
 func (o OptBadRequestDetail) Encode(e *jx.Encoder) {
 	if !o.Set {
@@ -6973,6 +7234,39 @@ func (s OptEvaluationRuleParametersEvaluationTarget) MarshalJSON() ([]byte, erro
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *OptEvaluationRuleParametersEvaluationTarget) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes EvaluationRuleParametersObjectStorageEvaluationTarget as json.
+func (o OptEvaluationRuleParametersObjectStorageEvaluationTarget) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	o.Value.Encode(e)
+}
+
+// Decode decodes EvaluationRuleParametersObjectStorageEvaluationTarget from json.
+func (o *OptEvaluationRuleParametersObjectStorageEvaluationTarget) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptEvaluationRuleParametersObjectStorageEvaluationTarget to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptEvaluationRuleParametersObjectStorageEvaluationTarget) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptEvaluationRuleParametersObjectStorageEvaluationTarget) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

@@ -202,6 +202,24 @@ func SetupEvaluationRuleInput(params *EvaluationRuleInputParams) *v1.EvaluationR
 				},
 			},
 		}
+	case "objectstorage-bucket-encryption-enabled":
+		return &v1.EvaluationRuleInput{
+			IsEnabled: params.Enabled,
+			Rule: v1.EvaluationRuleUnion{
+				OneOf: v1.EvaluationRuleUnionSum{
+					Type: v1.EvaluationRuleUnionSumType("objectstorage-bucket-encryption-enabled"),
+					ObjectStorageBucketEncryptionEnabled: v1.ObjectStorageBucketEncryptionEnabled{
+						EvaluationRuleId: v1.ObjectStorageBucketEncryptionEnabledEvaluationRuleId("objectstorage-bucket-encryption-enabled"),
+						Parameter: v1.NewOptEvaluationRuleParametersObjectStorageEvaluationTarget(
+							v1.EvaluationRuleParametersObjectStorageEvaluationTarget{
+								ServicePrincipalId: v1.NewOptString(params.ServicePrincipalID),
+								Sites:              params.Targets,
+							},
+						),
+					},
+				},
+			},
+		}
 	case "addon-datalake-no-public-access":
 		return &v1.EvaluationRuleInput{
 			IsEnabled: params.Enabled,

@@ -851,6 +851,18 @@ func TestEvaluationRuleParametersEvaluationTarget_EncodeDecode(t *testing.T) {
 	var typ2 EvaluationRuleParametersEvaluationTarget
 	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
 }
+func TestEvaluationRuleParametersObjectStorageEvaluationTarget_EncodeDecode(t *testing.T) {
+	var typ EvaluationRuleParametersObjectStorageEvaluationTarget
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 EvaluationRuleParametersObjectStorageEvaluationTarget
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
 func TestEvaluationRuleParametersZonedEvaluationTarget_EncodeDecode(t *testing.T) {
 	var typ EvaluationRuleParametersZonedEvaluationTarget
 	typ.SetFake()
@@ -1305,6 +1317,30 @@ func TestObjectStorageBucketACLChangedEvaluationRuleId_EncodeDecode(t *testing.T
 	require.True(t, std.Valid(data), "Encoded: %s", data)
 
 	var typ2 ObjectStorageBucketACLChangedEvaluationRuleId
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestObjectStorageBucketEncryptionEnabled_EncodeDecode(t *testing.T) {
+	var typ ObjectStorageBucketEncryptionEnabled
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 ObjectStorageBucketEncryptionEnabled
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestObjectStorageBucketEncryptionEnabledEvaluationRuleId_EncodeDecode(t *testing.T) {
+	var typ ObjectStorageBucketEncryptionEnabledEvaluationRuleId
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 ObjectStorageBucketEncryptionEnabledEvaluationRuleId
 	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
 }
 func TestProjectActivationCreateApplicationJSONBadRequest_EncodeDecode(t *testing.T) {
