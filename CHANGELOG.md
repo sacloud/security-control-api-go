@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.3.1](https://github.com/sacloud/security-control-api-go/compare/v0.3.0...v0.3.1) - 2026-08-03
+- test: use SAKURA_SECURITY_CONTROL_ prefix by @yamamoto-febc in https://github.com/sacloud/security-control-api-go/pull/29
+- update README for repository transition by @shyouhei in https://github.com/sacloud/security-control-api-go/pull/42
+
 ## [v0.3.0](https://github.com/sacloud/security-control-api-go/compare/v0.2.2...v0.3.0) - 2026-03-23
 - Add endpoint config from env and profile  by @to-shoji in https://github.com/sacloud/security-control-api-go/pull/26
 
